@@ -23,11 +23,5 @@ public record AutorDTO(
         @Size(min = 2,max = 50, message = "Numero de caracteres excedeu o limite!")
         String nacionalidade) {
 
-    public Autor mapearParaAutor() {
-        Autor autor = new Autor();
-        autor.setNome(this.nome);
-        autor.setDataNascimento(this.dataNascimento);
-        autor.setNacionalidade(this.nacionalidade);
-        return autor;
-    }
+
 }

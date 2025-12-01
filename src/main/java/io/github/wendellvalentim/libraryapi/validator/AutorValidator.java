@@ -27,17 +27,14 @@ public class AutorValidator {
                 autor.getNome(), autor.getDataNascimento(), autor.getNacionalidade()
         );
 
-        if(autorEncontrado.isEmpty()){
-            return false;
+        if(autor.getId() == null){
+            return autorEncontrado.isPresent();
         }
 
-        Autor duplicadoo = autorEncontrado.get();
-
-        if(autor.getId() != null && autor.getId().equals(duplicadoo.getId())) {
-            return false;
-        }
-
-        return true;
+        return autorEncontrado
+                .map(Autor::getId)
+                .stream()
+                .anyMatch(id -> !id.equals(autor.getId()));
     }
 
 }
