@@ -3,8 +3,10 @@ package io.github.wendellvalentim.libraryapi.Service;
 import io.github.wendellvalentim.libraryapi.exceptions.OperacaoNaoPermitidaException;
 import io.github.wendellvalentim.libraryapi.model.GeneroLivro;
 import io.github.wendellvalentim.libraryapi.model.Livro;
+import io.github.wendellvalentim.libraryapi.model.Usuario;
 import io.github.wendellvalentim.libraryapi.repository.LivroRepository;
 import io.github.wendellvalentim.libraryapi.repository.specs.LivroSpecs;
+import io.github.wendellvalentim.libraryapi.security.SecurityService;
 import io.github.wendellvalentim.libraryapi.validator.LivroValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -25,9 +27,12 @@ public class LivroService {
 
     private final LivroRepository repository;
     private final LivroValidator validator;
+    private final SecurityService securityService;
 
     public Livro salvar(Livro livro) {
         validator.validar(livro);
+        Usuario usuarioEncontrado = securityService.obterUsuarioLogado();
+        livro.setUsuario(usuarioEncontrado);
         return repository.save(livro);
     }
 

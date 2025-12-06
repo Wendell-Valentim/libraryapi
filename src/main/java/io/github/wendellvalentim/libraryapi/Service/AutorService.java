@@ -2,9 +2,12 @@ package io.github.wendellvalentim.libraryapi.Service;
 
 import io.github.wendellvalentim.libraryapi.exceptions.OperacaoNaoPermitidaException;
 import io.github.wendellvalentim.libraryapi.model.Autor;
+import io.github.wendellvalentim.libraryapi.model.Usuario;
 import io.github.wendellvalentim.libraryapi.repository.AutorRepository;
 import io.github.wendellvalentim.libraryapi.repository.LivroRepository;
+import io.github.wendellvalentim.libraryapi.security.SecurityService;
 import io.github.wendellvalentim.libraryapi.validator.AutorValidator;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.stereotype.Service;
@@ -14,6 +17,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Service
+@RequiredArgsConstructor
 public class AutorService {
 
     private final AutorRepository repository;
@@ -22,14 +26,14 @@ public class AutorService {
 
     private final LivroRepository livroRepository;
 
-    public  AutorService(AutorRepository autorRepository, AutorValidator validator, LivroRepository livroRepository) {
-        this.repository = autorRepository;
-        this.validator = validator;
-        this.livroRepository = livroRepository;
-    }
+    private final SecurityService securityService;
+
+
 
     public Autor salvar(Autor autor) {
         validator.validar(autor);
+        Usuario usuario = securityService.obterUsuarioLogado();
+        autor.setUsuario(usuario);
        return repository.save(autor);
 }
 
