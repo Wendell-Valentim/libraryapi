@@ -6,6 +6,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.UUID;
+
 @Service
 @RequiredArgsConstructor
 public class UsuarioService {
@@ -21,5 +23,17 @@ public class UsuarioService {
 
     public Usuario obterPorLogin(String login) {
         return repository.findByLogin(login);
+    }
+
+    public Usuario obterPorEmail(String email) {
+        return repository.findByEmail(email);
+    }
+
+    public String gerarSenhaAleatoria() {
+        String senhaUUID = UUID.randomUUID().toString();
+
+        String senhaLimpa = senhaUUID.replace("-", "");
+
+        return senhaLimpa.substring(0, 16);
     }
 }
