@@ -30,3 +30,11 @@ email varchar(150) not null unique,
 roles varchar[]
 )
 ;
+
+CREATE TABLE client (
+id uuid not null primary key,
+client_id varchar(150) not null,
+cliente_secret varchar(400),
+redirect_uri varchar(200) not null,
+scope varchar(50)
+);
