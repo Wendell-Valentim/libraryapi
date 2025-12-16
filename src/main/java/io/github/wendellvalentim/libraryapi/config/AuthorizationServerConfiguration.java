@@ -51,7 +51,7 @@ public class AuthorizationServerConfiguration {
     }
 
     @Bean
-    public PasswordEncoder passwordEncoder() {
+    public PasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder(10);
     }
 
@@ -59,7 +59,10 @@ public class AuthorizationServerConfiguration {
     public TokenSettings tokenSettings() {
         return TokenSettings.builder()
                 .accessTokenFormat(OAuth2TokenFormat.SELF_CONTAINED)
+                //acess token: Token, utilizado nas requisições
                 .accessTokenTimeToLive(Duration.ofMinutes(60))
+                //refresh: token para renovar o acess token
+                .refreshTokenTimeToLive(Duration.ofMinutes(90))
                 .build();
     }
 
@@ -73,13 +76,13 @@ public class AuthorizationServerConfiguration {
     // JWk = jason web key. Assinatura digital, precisamos de um token jwk para assinar.
     @Bean
     public JWKSource<SecurityContext> jwkSource() throws Exception {
-        RSAKey rsaKey = gerarChaveRsa();
+        RSAKey rsaKey = gerarChaveRSA();
         JWKSet jwkSet = new JWKSet(rsaKey);
-        return new ImmutableJWKSet<> (jwkSet);
+        return new ImmutableJWKSet<>(jwkSet);
     }
 
     //GERAR PAR DE CHAVES RSA
-    private RSAKey gerarChaveRsa() throws Exception{
+    private RSAKey gerarChaveRSA() throws Exception {
         KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");
         keyPairGenerator.initialize(2048);
         KeyPair keyPair = keyPairGenerator.generateKeyPair();
@@ -87,12 +90,15 @@ public class AuthorizationServerConfiguration {
         RSAPublicKey chavePublica = (RSAPublicKey) keyPair.getPublic();
         RSAPrivateKey chavePrivada = (RSAPrivateKey) keyPair.getPrivate();
 
-        return new RSAKey.Builder(chavePublica).privateKey(chavePrivada)
-                .keyID(UUID.randomUUID().toString()).build();
+        return new RSAKey
+                .Builder(chavePublica)
+                .privateKey(chavePrivada)
+                .keyID(UUID.randomUUID().toString())
+                .build();
     }
 
     @Bean
-    public JwtDecoder jwtDecoder(JWKSource<SecurityContext> jwkSource) {
+    public JwtDecoder jwtDecoder(JWKSource<SecurityContext> jwkSource){
         return OAuth2AuthorizationServerConfiguration.jwtDecoder(jwkSource);
     }
 }
