@@ -3,6 +3,7 @@ package io.github.wendellvalentim.libraryapi.config;
 import io.github.wendellvalentim.libraryapi.Service.UsuarioService;
 import io.github.wendellvalentim.libraryapi.model.Usuario;
 //import io.github.wendellvalentim.libraryapi.security.CustomUserDetailService;
+import io.github.wendellvalentim.libraryapi.security.JwtCustomAuthenticationFilter;
 import io.github.wendellvalentim.libraryapi.security.LoginSocialSucessHandler;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -21,6 +22,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
+import org.springframework.security.oauth2.server.resource.web.authentication.BearerTokenAuthenticationFilter;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 
@@ -31,7 +33,9 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfiguration {
 
     @Bean
-    public SecurityFilterChain securityFilterChain (HttpSecurity http, LoginSocialSucessHandler sucessHandler) throws Exception {
+    public SecurityFilterChain securityFilterChain (HttpSecurity http,
+                                                    LoginSocialSucessHandler sucessHandler,
+                                                    JwtCustomAuthenticationFilter jwtCustomAuthenticationFilter) throws Exception {
         return http
                 //dasbilitar para que outras aplicações como Angular ou React possam ter comunicação com a aplicação/API
                 //configurador HTTP ABSTRACT, por este comando desabilito o csrf
@@ -54,6 +58,7 @@ public class SecurityConfiguration {
                             .successHandler(sucessHandler);
                 })
                 .oauth2ResourceServer(oauth2Rs -> oauth2Rs.jwt(Customizer.withDefaults()))
+                .addFilterAfter(jwtCustomAuthenticationFilter, BearerTokenAuthenticationFilter.class)
                 .build();
     }
 
