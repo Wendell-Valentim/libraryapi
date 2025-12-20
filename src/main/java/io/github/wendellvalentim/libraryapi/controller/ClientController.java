@@ -2,6 +2,10 @@ package io.github.wendellvalentim.libraryapi.controller;
 
 import io.github.wendellvalentim.libraryapi.Service.ClientService;
 import io.github.wendellvalentim.libraryapi.model.Client;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/clients")
 @RequiredArgsConstructor
+@Tag(name = "Client")
 public class ClientController {
 
     private final ClientService service;
@@ -18,6 +23,10 @@ public class ClientController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize("hasRole('GERENTE')")
+    @Operation(summary = "Salvar", description = "Cadastrar novo client.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "201", description = "Cliente cadastrado.")
+    })
     public void salvar(@RequestBody Client client) {
         service.salvar(client);
 

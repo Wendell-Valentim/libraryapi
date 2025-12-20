@@ -1,6 +1,8 @@
 package io.github.wendellvalentim.libraryapi.controller.login;
 
 import io.github.wendellvalentim.libraryapi.security.CustomAuthentication;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,6 +12,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 
+@Tag(name = "Segurança")
 public class LoginViewController {
 
     @GetMapping("/login")
@@ -17,9 +20,10 @@ public class LoginViewController {
         return "login";
     }
 
-    @GetMapping("/")
+    @GetMapping("/me")
     @ResponseBody
-    public String home(Authentication authentication) {
+    @Operation(summary = "Dados", description = "Dados do usuario logado.")
+    public String getAuthenticatedUser(Authentication authentication) {
         if(authentication instanceof CustomAuthentication customAuth) {
             System.out.println(customAuth.getUsuario());
         }
@@ -28,6 +32,7 @@ public class LoginViewController {
 
     @GetMapping("/authorized")
     @ResponseBody
+    @Operation(summary = "Dados", description = "Codigo de autorização do usuario logado.")
     public String getAuthorizationCode(@RequestParam("code") String code) {
         return "Seu authorization code:" + code;
     }

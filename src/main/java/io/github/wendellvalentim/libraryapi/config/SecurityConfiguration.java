@@ -41,7 +41,6 @@ public class SecurityConfiguration {
                 //dasbilitar para que outras aplicações como Angular ou React possam ter comunicação com a aplicação/API
                 //configurador HTTP ABSTRACT, por este comando desabilito o csrf
                 .csrf(AbstractHttpConfigurer::disable)
-                .httpBasic(Customizer.withDefaults())
                 //formulario padrão, metodo não faz "nada"
                .formLogin(configurer -> {
                    configurer.loginPage("/login").permitAll();
