@@ -71,7 +71,9 @@ public class SecurityConfiguration {
                          "/swagger-resources/**",
                          "/swagger-ui.html",
                          "/swagger-ui/**",
-                         "/webjars/**"
+                         "/webjars/**",
+                         //é bom colocar para autenticação
+                         "/actuator/**"
         );
     }
 

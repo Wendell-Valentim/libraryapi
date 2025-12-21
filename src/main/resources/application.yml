@@ -1,6 +1,9 @@
 spring:
   profiles:
     active: local
+  output:
+    ansi:
+      enabled: ALWAYS
   application:
     name: libraryapi
   datasource:
@@ -22,7 +25,31 @@ spring:
           google:
             client-id: ${GOOGLE_CLIENT_ID}
             client-secret: ${GOOGLE_CLIENT_SECRET}
+logging:
+  file:
+    name: app.log
+  level:
+    root: warn
+    io:
+      github:
+        wendellvalentim: trace
+    org:
+      springframework:
+        web: debug
+        security: trace
 
+# trace
+# debug
+# info
+# warn
+# error
+management:
+  server:
+    port: 9090
+  endpoints:
+    web:
+      exposure:
+        include: '* '
 
 springdoc:
   override-with-generic-response: false

@@ -5,6 +5,7 @@ import io.github.wendellvalentim.libraryapi.controller.dto.ErroResposta;
 import io.github.wendellvalentim.libraryapi.exceptions.CampoInvalidoException;
 import io.github.wendellvalentim.libraryapi.exceptions.OperacaoNaoPermitidaException;
 import io.github.wendellvalentim.libraryapi.exceptions.RegistroDuplicadoException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
@@ -20,11 +21,13 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestControllerAdvice
+@Slf4j
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
     public ErroResposta handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
+        log.error("Erro de validação: {}", e.getMessage());
         List<FieldError> fieldErros = e.getFieldErrors();
         List<ErroCampo> listErros = fieldErros.stream()
                 .map(fe -> new ErroCampo(fe.getField(), fe.getDefaultMessage()))
@@ -57,9 +60,10 @@ public class GlobalExceptionHandler {
         return new ErroResposta(HttpStatus.FORBIDDEN.value(), "Acesso Negado!!", List.of());
     }
 
-//    @ExceptionHandler(RuntimeException.class)
-//    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-//    public ErroResposta handleErrosNaoTratados (RuntimeException e) {
-//        return new ErroResposta(HttpStatus.INTERNAL_SERVER_ERROR.value(), "Erro inesperado, contate a administração!", List.of());
-//    }
+    @ExceptionHandler(RuntimeException.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public ErroResposta handleErrosNaoTratados (RuntimeException e) {
+        log.error("Erro inesperado: {}",e);
+        return new ErroResposta(HttpStatus.INTERNAL_SERVER_ERROR.value(), "Erro inesperado, contate a administração!", List.of());
+    }
 }
