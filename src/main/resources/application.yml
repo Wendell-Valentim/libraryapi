@@ -1,13 +1,14 @@
 spring:
-  profiles:
-    active: local
+  application:
+    name: libraryapi
+    # profiles:
+    #  active: production
+    # SPRING_PROFILES_ACTIVE=production
   output:
     ansi:
       enabled: ALWAYS
-  application:
-    name: libraryapi
   datasource:
-    url: jdbc:postgresql://localhost:5432/library
+    url: ${DATASOURCE_URL}
     username: ${POSTGRES_USERNAME}
     password: ${POSTGRES_PASSWORD}
     driver-class-name: org.postgresql.Driver
@@ -29,7 +30,7 @@ logging:
   file:
     name: app.log
   level:
-    root: warn
+    root: info
     io:
       github:
         wendellvalentim: trace
@@ -49,7 +50,27 @@ management:
   endpoints:
     web:
       exposure:
-        include: '* '
+        include: '*'
 
 springdoc:
   override-with-generic-response: false
+
+# production
+---
+spring:
+  config:
+    activate:
+      on-profile: production
+  jpa:
+    show-sql: false
+
+# homologacao
+---
+spring:
+  config:
+    activate:
+      on-profile: homologacao
+  jpa:
+    show-sql: false
+  datasource:
+    url: jdbc:postgresql://localhost:5432/library
