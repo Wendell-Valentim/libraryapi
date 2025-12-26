@@ -2,6 +2,7 @@ package io.github.wendellvalentim.libraryapi.config;
 
 import javax.sql.DataSource;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -11,6 +12,7 @@ import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 
 @Configuration
+@Slf4j
 public class DataBaseConfiguration {
 	@Value("${spring.datasource.url}")
 	String url;
@@ -36,6 +38,7 @@ public class DataBaseConfiguration {
 	@Bean
     public DataSource hikariDataSource(){
 
+		log.info("Conectando no banco de dados com a url: {}", url);
         HikariConfig config = new HikariConfig();
         config.setUsername(username);
         config.setPassword(password);
